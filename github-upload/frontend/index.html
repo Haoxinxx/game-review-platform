@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>游戏点评平台</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/components.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h1>🎮 游戏点评平台</h1>
+            </div>
+            
+            <!-- 搜索框 -->
+            <div class="nav-search">
+                <input type="text" id="searchInput" placeholder="搜索游戏..." class="search-input">
+                <button id="searchBtn" class="search-btn">🔍</button>
+            </div>
+            
+            <!-- 用户菜单 -->
+            <div class="nav-user">
+                <div id="userMenu" class="user-menu hidden">
+                    <span id="username" class="username"></span>
+                    <button id="logoutBtn" class="logout-btn">登出</button>
+                </div>
+                <div id="authButtons" class="auth-buttons">
+                    <button id="loginBtn" class="btn btn-outline">登录</button>
+                    <button id="registerBtn" class="btn btn-primary">注册</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主内容区域 -->
+    <main class="main-content">
+        <!-- 游戏列表页面 -->
+        <div id="gameListPage" class="page active">
+            <div class="container">
+                <div class="page-header">
+                    <h2>热门游戏</h2>
+                    <div class="sort-controls">
+                        <label for="sortSelect">排序方式:</label>
+                        <select id="sortSelect" class="sort-select">
+                            <option value="name-ASC">名称 A-Z</option>
+                            <option value="name-DESC">名称 Z-A</option>
+                            <option value="avg_rating-DESC">评分从高到低</option>
+                            <option value="avg_rating-ASC">评分从低到高</option>
+                            <option value="review_count-DESC">评论数从多到少</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="gameGrid" class="game-grid">
+                    <!-- 游戏卡片将通过JavaScript动态生成 -->
+                </div>
+                
+                <div id="loadingSpinner" class="loading hidden">
+                    <div class="spinner"></div>
+                    <p>加载中...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 游戏详情页面 -->
+        <div id="gameDetailPage" class="page hidden">
+            <div class="container">
+                <button id="backToListBtn" class="btn btn-outline back-btn">← 返回游戏列表</button>
+                
+                <div id="gameDetail" class="game-detail">
+                    <!-- 游戏详情内容将通过JavaScript动态生成 -->
+                </div>
+                
+                <!-- 评论区域 -->
+                <div class="comments-section">
+                    <h3>玩家评论</h3>
+                    
+                    <!-- 发布评论表单 -->
+                    <div id="commentForm" class="comment-form hidden">
+                        <h4>发表评论</h4>
+                        <div class="rating-input">
+                            <label>评分:</label>
+                            <div class="star-rating">
+                                <span class="star" data-rating="1">★</span>
+                                <span class="star" data-rating="2">★</span>
+                                <span class="star" data-rating="3">★</span>
+                                <span class="star" data-rating="4">★</span>
+                                <span class="star" data-rating="5">★</span>
+                            </div>
+                            <span id="ratingValue" class="rating-value">0</span>
+                        </div>
+                        <textarea id="commentContent" placeholder="分享您的游戏体验..." rows="4"></textarea>
+                        <div class="form-actions">
+                            <button id="submitCommentBtn" class="btn btn-primary">发布评论</button>
+                            <button id="cancelCommentBtn" class="btn btn-outline">取消</button>
+                        </div>
+                    </div>
+                    
+                    <div id="loginPrompt" class="login-prompt">
+                        <p>请先登录后再发表评论</p>
+                        <button id="promptLoginBtn" class="btn btn-primary">立即登录</button>
+                    </div>
+                    
+                    <!-- 评论列表 -->
+                    <div id="commentsList" class="comments-list">
+                        <!-- 评论将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 登录模态框 -->
+    <div id="loginModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>用户登录</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <label for="loginUsername">用户名或邮箱:</label>
+                    <input type="text" id="loginUsername" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">密码:</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">登录</button>
+                    <button type="button" class="btn btn-outline modal-close">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 注册模态框 -->
+    <div id="registerModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>用户注册</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form id="registerForm" class="auth-form">
+                <div class="form-group">
+                    <label for="registerUsername">用户名:</label>
+                    <input type="text" id="registerUsername" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">邮箱:</label>
+                    <input type="email" id="registerEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">密码:</label>
+                    <input type="password" id="registerPassword" required minlength="6">
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">确认密码:</label>
+                    <input type="password" id="confirmPassword" required minlength="6">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">注册</button>
+                    <button type="button" class="btn btn-outline modal-close">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 消息提示 -->
+    <div id="messageToast" class="toast hidden">
+        <span id="toastMessage"></span>
+        <button id="toastClose">&times;</button>
+    </div>
+
+    <!-- JavaScript文件 -->
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/games.js"></script>
+    <script src="js/comments.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
